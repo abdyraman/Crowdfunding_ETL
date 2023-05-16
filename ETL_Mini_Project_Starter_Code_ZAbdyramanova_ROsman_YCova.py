@@ -24,6 +24,11 @@ crowdfunding_info_df.head()
 
 
 # Get a brief summary of the crowdfunding_info DataFrame.
+# In[4]:
+
+
+# Get a brief summary of the crowdfunding_info DataFrame.
+crowdfunding_info_df.info()
 
 
 # ### Create the Category and Subcategory DataFrames
@@ -146,6 +151,7 @@ subcategory_df.to_csv("Resources/subcategory.csv", index=False)
 # 
 
 # In[14]:
+# In[5]:
 
 
 # Create a copy of the crowdfunding_info_df DataFrame name campaign_df. 
@@ -176,14 +182,53 @@ campaign_df.head()
 
 # Format the launched_date and end_date columns to datetime format
 from datetime import datetime as dt
+# In[11]:
+
+
+# Rename the blurb, launched_at, and deadline columns.
+campaign_df.rename(columns={'launched_at':'launch_date',
+                             'deadline':'end_date'}, inplace=True)
+campaign_df
+
+
+# In[15]:
+
+
+campaign_df.dtypes
 
 
 # In[19]:
 
 
+# Convert the goal and pledged columns to a `float` data type.
+campaign_df["pledged"]=pd.to_numeric(campaign_df["pledged"]).astype(float)
+campaign_df["goal"]=pd.to_numeric(campaign_df["goal"]).astype(float)
+
+
+# In[20]:
+
+
+# Check the datatypes
+campaign_df.dtypes
+
+
+# In[30]:
+
+
+# Format the launched_date and end_date columns to datetime format
+from datetime import datetime as dt
+campaign_df["launch_date"] = pd.to_datetime(campaign_df["launch_date"]).dt.strftime('%Y-%m-%d') 
+campaign_df["end_date"] = pd.to_datetime(campaign_df["end_date"]).dt.strftime('%Y-%m-%d')
+campaign_df
+
+
+# In[31]:
+
+
 # Merge the campaign_df with the category_df on the "category" column and 
 # the subcategory_df on the "subcategory" column.
-
+campaign_df_merged_df = pd.merge(campaign_df, category_df, on='category')
+campaign_df_merged_df = pd.merge(merged_df, subcategory_df, on='subcategory')
 
 campaign_merged_df.tail(10)
 
@@ -192,6 +237,8 @@ campaign_merged_df.tail(10)
 
 
 # Drop unwanted columns
+campaign_cleaned=campaign_df.drop("staff_pick","spotlight","category & sub-category","category","subcategory"), axis=1))
+campaign_cleaned
 
 
 # In[21]:
@@ -203,7 +250,7 @@ campaign_cleaned.to_csv("Resources/campaign.csv", index=False)
 
 # ### Extract the contacts.xlsx Data.
 
-# In[130]:
+# In[23]:
 
 
 # Read the data into a Pandas DataFrame. Use the `header=2` parameter when reading in the data.
@@ -224,6 +271,7 @@ contact_info_df.head()
 # ### Option 1: Use Pandas to create the contacts DataFrame.
 
 # In[131]:
+# In[24]:
 
 
 # Iterate through the contact_info_df and convert each row to a dictionary.
